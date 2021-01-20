@@ -1,0 +1,443 @@
+---
+title: "Trabalho de Métodos de Amostragem"
+author: "Elen Grochovski GRR20170407"
+date: "30 de novembro de 2018"
+output:
+  pdf_document: default
+  html_document: default
+teacher: Ary Elias Sabbag Junior
+---
+
+# Exercícios 1,2,3
+  Com uma população de tamanho $N=6$ realizar todas as amostras com tamanho $n=2,3,4$ e estimar média, variância e desvio padrão.
+  
+**Com base nos teoremas:**
+
+**TEOREMA 1:** Em uma população de tamanho $N$, selecionamos aleatoriamente, sem reposição, uma amostra de tamanho $n$, temos que $\overline{y}=\frac{\sum_{i=1}^ny_i}{n}$ é um estimador não viesado de $\overline{Y}$
+
+**TEOREMA 2:** Seja $y$ a variável de interesse e seja $N$ o tamanho da população. Considere que serão selecionados $n$ unidades desta população através do processo de amostragem aleatória simples. A medida de incerteza sobre a média amostral calculada com base na amostra será dada por $$V[\overline{y}]=E[(\overline{y}-\overline{Y})^2]=\left[\frac{N-n}{N}\right]\frac{S^2}{n}$$
+
+**TEOREMA 3:** No plano de amostragem aleatória simples, com uma amostra de tamanho $n$ selecionada aleatoriamente de uma população de tamanho $N$ temos que $s^2 = \frac{\sum_{i=1}^n(y_i-\overline{y})^2}{n-1}$ é um estimador não viesado de $S^2$
+
+**Intervalo de confiança para a média:** $$\overline{Y}\pm Z_{1-\frac{\alpha}{2}}\sqrt{\frac{N-n}{N}}\frac{S}{\sqrt{n}}$$
+
+
+# População
+
+```{r, echo = F}
+populacao <- c(2,4,5,7,8,9)
+y <- data.frame(Populacao = c("y1","y2","y3","y4","y5","y6"), Valores = populacao)
+y
+```
+
+**Média Populacional**
+
+```{r, echo=F}
+mean(y$Valores)
+```
+
+**Variância Populacional**
+
+```{r, echo=F}
+var(y$Valores)
+```
+
+# Amostra tamanho $n=2$
+
+```{r, echo=F}
+n2 <- combn(x = populacao,m = 2,simplify = T) # Todas as combinações para n=2
+amostra2 <- t(n2)
+rownames(amostra2) <- 1:15 
+colnames(amostra2) <- c("x1","x2") # Todas as combinações transpostas e devidamente nomeadas, para n=2
+amostra2 <- data.frame(amostra2)
+
+for (i in 1:15) {
+  amostra2$mean[i] <- (amostra2$x1[i]+amostra2$x2[i])/2
+} # média de cada uma das amostras n=2
+
+for (i in 1:15) {
+  amostra2$prob[i] <- 1/15
+} # Probabilidade de cada uma das amostras n=2
+
+for (i in 1:15) {
+  amostra2$esp[i] <- (amostra2$mean[i]*amostra2$prob[i])
+} # Esperança de cada uma das amostras n=2
+
+for (i in 1:15) {
+  amostra2$var[i] <- (((amostra2$mean[i]-mean(amostra2$mean))^2)*amostra2$prob[i])
+} # variância de cada uma das amostras n=2
+
+for (i in 1:15) {
+  amostra2$S2[i] <- ((amostra2$x1[i]-amostra2$mean[i])^2+(amostra2$x2[i]-amostra2$mean[i])^2)
+} # S^2 de cada uma das amostras n=2
+
+round(amostra2,digits = 3)
+```
+Média das médias das amostra $n=2$
+```{r,echo=F}
+mean(amostra2$mean)
+```
+Variância da média da amostra $n=2$
+```{r,echo=F}
+sum(amostra2$var)
+```
+Variância da amostra $n=2$
+```{r,echo=F}
+(sum(amostra2$S2))*1/15
+```
+
+Intervalo de confiança com 80% para as médias da amostra $n=2$
+
+$\overline{Y}=5,833$ 
+
+$IC = 5.833\pm 1,95$
+
+$\overline{Y}min =3.88$
+
+$\overline{Y}max =7.78$
+
+```{r,echo=F}
+plot(amostra2$mean,ylab = "médias",xlab = "Quantidade de amostras")
+x <- 1.28*(sqrt((6-2)/6)*(sqrt(6.967/2)))
+xmin <- 5.833-x
+xmax <- 5.833+x
+abline(h = xmin)
+abline(h = xmax)
+```
+
+
+
+
+# Amostra tamanho $n=3$
+
+```{r, echo=F}
+n3 <- combn(x = populacao,m = 3,simplify = T) # Todas as combinações para n=3
+amostra3 <- t(n3)
+rownames(amostra3) <- 1:20 
+colnames(amostra3) <- c("x1","x2","x3") # Todas as combinações transpostas e devidamente nomeadas, para n=3
+amostra3 <- data.frame(amostra3)
+
+for (i in 1:20) {
+  amostra3$mean[i] <- (amostra3$x1[i]+amostra3$x2[i]+amostra3$x3[i])/3
+} # média de cada uma das amostras n=3
+
+for (i in 1:20) {
+  amostra3$prob[i] <- 1/20
+} # Probabilidade de cada uma das amostras n=3
+
+for (i in 1:20) {
+  amostra3$esp[i] <- (amostra3$mean[i]*amostra3$prob[i])
+} # Esperança de cada uma das amostras n=3
+
+for (i in 1:20) {
+  amostra3$var[i] <- (((amostra3$mean[i]-mean(amostra3$mean))^2)*amostra3$prob[i])
+} # variância de cada uma das amostras n=3
+
+for (i in 1:20) {
+  amostra3$S2[i] <- ((amostra3$x1[i]-amostra3$mean[i])^2+(amostra3$x2[i]-amostra3$mean[i])^2+(amostra3$x3[i]-amostra3$mean[i])^2)
+} # S^2 de cada uma das amostras n=3
+
+round(amostra3,digits = 3)
+```
+Média das médias das amostra $n=3$
+```{r,echo=F}
+mean(amostra3$mean)
+```
+Variância da média da amostra $n=3$
+```{r,echo=F}
+sum(amostra3$var)
+```
+Variância da amostra $n=3$
+```{r,echo=F}
+((sum(amostra3$S2))*1/20)/2
+```
+Intervalo de confiança com 80% para as médias da amostra $n=3$
+
+$\overline{Y}=5,833$ 
+
+$IC = 5.833\pm 1,37$
+
+$\overline{Y}min =4.45$
+
+$\overline{Y}max =7.21$
+
+```{r,echo=F}
+plot(amostra3$mean,ylab = "médias",xlab = "Quantidade de amostras")
+y <- 1.28*(sqrt((6-3)/6)*(sqrt(6.967/3)))
+ymin <- 5.833-y
+ymax <- 5.833+y
+abline(h = ymin)
+abline(h = ymax)
+```
+
+# Amostra tamanho $n=4$
+
+```{r, echo=F}
+n4 <- combn(x = populacao,m = 4,simplify = T) # Todas as combinações para n=4
+amostra4 <- t(n4)
+rownames(amostra4) <- 1:15 
+colnames(amostra4) <- c("x1","x2","x3","x4") # Todas as combinações transpostas e devidamente nomeadas, para n=4
+amostra4 <- data.frame(amostra4)
+
+for (i in 1:15) {
+  amostra4$mean[i] <- (amostra4$x1[i]+amostra4$x2[i]+amostra4$x3[i]+amostra4$x4[i])/4
+} # média de cada uma das amostras n=2
+
+for (i in 1:15) {
+  amostra4$prob[i] <- 1/15
+} # Probabilidade de cada uma das amostras n=4
+
+for (i in 1:15) {
+  amostra4$var[i] <- (((amostra4$mean[i]-mean(amostra4$mean))^2)*amostra4$prob[i])
+} # variância de cada uma das amostras n=4
+
+for (i in 1:15) {
+  amostra4$S2[i] <- ((amostra4$x1[i]-amostra4$mean[i])^2+(amostra4$x2[i]-amostra4$mean[i])^2+(amostra4$x3[i]-amostra4$mean[i])^2+(amostra4$x4[i]-amostra4$mean[i])^2)
+} # S^2 de cada uma das amostras n=4
+
+round(amostra4,digits = 3)
+```
+Média das médias das amostra $n=4$
+```{r,echo=F}
+mean(amostra4$mean)
+```
+Variância da média da amostra $n=4$
+```{r,echo=F}
+sum(amostra4$var)
+```
+Variância da amostra $n=4$
+```{r,echo=F}
+(sum(amostra4$S2)/3)*1/15
+```
+Intervalo de confiança com 80% para as médias da amostra $n=4$
+
+$\overline{Y}=5,833$ 
+
+$IC = 5.833\pm 0,98$
+
+$\overline{Y}min =4.86$
+
+$\overline{Y}max =6.81$
+
+```{r,echo=F}
+plot(amostra4$mean,ylab = "médias",xlab = "Quantidade de amostras")
+z <- 1.28*(sqrt((6-4)/6)*(sqrt(6.967/4)))
+zmin <- 5.833-z
+zmax <- 5.833+z
+abline(h = zmin)
+abline(h = zmax)
+```
+
+
+# Exercício 4
+**TABELA ANEXADA AO FINAL**
+
+Utilizando a fórmula do RSTUDIO **sample(1:1000, size = 10,replace = F)** gerei 10 números aleatórios dentre os 1000. Os números gerados foram: 410, 686, 28, 491, 927, 658, 721, 883, 931, 399. Retirei da tabela os QI's: 101, 93, 103, 95, 94, 95, 92, 88, 89, 83 e com eles obtive os seguintes resultados:
+
+Média:
+```{r,echo=F}
+amostra <- c(101,93,103,95,94,95,92,88,89,83)
+mean(amostra)
+```
+Desvio padrão:
+```{r,echo=F}
+desvio <- c()
+for (i in 1:10) {
+  desvio[i] <- (amostra[i]-mean(amostra))^2
+ }
+sqrt(sum(desvio)/10)
+```
+
+Intervalo de confiança com 95% para média
+
+$\overline{y}=93,30$ 
+
+$IC = 93,30\pm 3,45$
+
+$\overline{y}min =89,85$
+
+$\overline{y}max =96,75$
+
+
+# Exercício 5
+
+**Amostra piloto do Exercício anterior.**
+
+fórmula: $$n=\frac{n_0}{1+\frac{n_0}{N}}$$
+
+Onde $$n_0=\left(\frac{Z_{1-\frac{\alpha}{2}}S_p}{r\overline{y}_p}\right)^2$$
+
+$S_p$ e $\overline{y}_p$ são estimativas calculadas com base em uma amostra piloto.
+
+$r=0,03$ é o erro aceitável pelo pesquisador.
+
+O nível de confiança é de $(1-\alpha)=95$% dado por $z=1.96$
+
+Com essas informações nós temos os resultados abaixo:
+
+$n_0:$
+```{r,echo=F}
+n_0 <- ((1.96*5.60)/(0.03*93.30))^2
+n_0
+```
+$n:$
+```{r,echo=F}
+n <- n_0/(1+(n_0/1000))
+round(n,digits = 0)
+```
+
+
+# Exercício 6
+Considere que uma petição está sendo lançada para determinado pedido de uma certa causa. Na petição, ao todo, existem 676 páginas onde cada uma delas tem um determinado número de assinaturas. Foi selecionada uma amostra de 50 páginas registrando-se o número de assinaturas em cada uma delas. Com base nesta amostra estime o número total de assinaturas e determine o intervalo com 80% de confiança. Na tabela abaixo são apresentados os seguintes resultados obtidos na amostra.
+
+```{r, echo=F}
+Yi <- c(42,41,36,32,29,27,23,19,16,15,14,11,10,9,7,6,5,4,3)
+Fr <- c(23,4,1,1,1,2,1,1,2,2,1,1,1,1,1,3,2,1,1)
+proporcao <- data.frame(Yi,Fr)
+
+
+for (i in 1:19) {
+  proporcao$Total[i] <- (proporcao$Yi[i]*proporcao$Fr[i])
+} # Yi*Fr
+
+proporcao
+```
+
+A média ponderada é dada por $\frac{\sum_{i=1}^n(y_ifr)}{\sum_{i=1}^nfr}$
+```{r, echo=F}
+sum(proporcao$Yi*proporcao$Fr)/sum(proporcao$Fr)
+```
+
+A variância é dada por $\frac{\sum_{i=1}^n(y_i-\mu)^2}{\sum_{i=1}^nfr}$
+
+```{r, echo=F}
+variancia <- c()
+for (i in 1:19) {
+  variancia[i] <- ((proporcao$Yi[i]-29.42)^2)*proporcao$Fr[i]
+}
+sqrt(sum(variancia)/sum(proporcao$Fr))
+```
+
+Total estimado de assinaturas
+```{r, echo=F}
+round(sum(proporcao$Yi*proporcao$Fr)/sum(proporcao$Fr)*676,digits = 0)
+```
+
+Intervalo de confiança com 80% para média
+
+$\overline{y}=29,42$ 
+
+$IC = 29,42\pm2,48$
+
+$\overline{y}min=26,94$
+
+$\overline{y}max=31,90$
+
+Intervalo de confiança com 80% para o total de assinaturas
+
+$IC = 19.888\pm1676$
+
+$\overline{ass}min=18.212$
+
+$\overline{ass}max=21.564$
+
+
+```{r,echo=F}
+ic <- 1.28*(sqrt((676-50)/50)*(sqrt(14.98/50)))
+zmin <- 29.42-ic
+zmax <- 29.42+ic
+assmin <- zmin*676
+assmax <- zmax*676
+```
+
+
+
+# Exercício 7
+Um antropólogo tem interesse em estudar os habitantes de uma ilha. Seu particular interesse é conhecer o percentual de habitantes que pertencem ao grupo sanguineo O. O pesquisador aceita como razoável um erro de mais ou menos %. O grau de confiança desejado na pesquisa é de 95%. Sabe-se que ao todo, existem na ilha, 3200 nativos. Calcular o tamanho da amostra.
+
+$d=0,05$
+
+$\alpha=0,05$
+
+$Z = 1-\alpha = 95$%$=1,96$
+
+$n=\frac{\left(\frac{Z}{d}\right)^2PQ}{1+\left(\frac{Z}{d}\right)^2\frac{PQ}{N}}$
+
+O resultado dessa conta é
+
+```{r,echo=F}
+round((1536.64*0.25)/(1+((1536.64*0.25)/3200)))
+```
+
+Portanto, precisamos de 343 nativos para ter 95% de confiança que o erro será de $\pm5$%
+
+Considere que o pesquisador selecionou uma amostra com o tamanho calculado 343. Destes 343 nativos 145 tinham o grupo sanguíneo **O**. Estime o número de nativos pertencentes a este grupo sanguíneo e calcule o intervalo com 95% de confiança para esse número.
+
+Estimando a proporção de nativos pertencentes ao tipo sanguíneo **O** utillizamos $\overline{p}=\frac{a}{n}$
+
+```{r,echo=F}
+p <- 145/343
+round(p,2)
+```
+
+Agora estimamos o total de nativos pertencentes ao tipo sanguíneo **O** utillizando $\hat{A}=Np$
+```{r,echo=F}
+aa <- 3200*0.42
+aa
+```
+
+Calculando o intervalo de confiança com a fórmula $$p\pm\left[Z_{1-\frac{\alpha}{2}}\sqrt{\frac{N-n}{N}}\sqrt{\frac{pq}{n-1}}+\frac{1}{2n}\right]$$
+
+Intervalo de confiança com 95% para a proporção de nativos pertencentes ao grupo sanguíneo **O**
+
+$\overline{p}=0,42$ 
+
+$IC = 0,42\pm0,05$
+
+$\overline{p}min=0,37$
+
+$\overline{p}max=0,37$
+
+Intervalo de confiança com 95% para o total de nativos pertencentes ao grupo sanguíneo **O**
+
+$\hat{A}=1344$ 
+
+$IC = 1344\pm160$
+
+$\hat{A}min=1184$
+
+$\hat{A}max=1504$
+
+
+# Exercício 8
+Considere uma particular região onde existem 1350 fazendas que produzem trigo. Deseja-se estimar o percentual da área total plantada com esta cultura nesta região. Para tanto selecionou-se uma amostra com 20 fazendas registrando-se as áreas total da fazenda e plantada com trigo (ambas em hecatares).
+
+```{r,echo=F}
+fazendaa <- c(1:20)
+areatotal <- c(24,19,27,26,27,17,15,7,13,22,8,12,13,11,5,5,27,23,31,12)
+areaplantada <- c(12.5,7.9,11.1,10.9,11.2,7,7.9,3.3,4.1,8.1,3.3,5.8,4.4,3.7,2.1,1.7,12.3,9.5,12.3,4.4)
+fazenda <- data.frame(Fazenda=fazendaa,Area_Total=areatotal,Area_Plantada=areaplantada)
+fazenda
+```
+
+Como estamos estimando uma razão, podemos utilizar a fórmula $\hat{R}=\frac{\overline{y}}{\overline{x}}$ nos dando o resultado
+
+
+```{r,echo=F}
+rr <- sum(fazenda$Area_Plantada)/sum(fazenda$Area_Total)
+rr
+```
+
+Para o calculo do erro padrão vamos precisar da fórmula $$\widehat{EP[\hat{R}]}=\sqrt{\frac{(N-n)}{N}}\frac{1}{\sqrt{n}\overline{x}}\sqrt{\frac{\sum_{i=1}^n(y_i-\hat{R}x_i)^2}{N-1}}$$
+que nos dá o seguinte resultado
+
+```{r,echo=F}
+sqrt((1350-20)/1350)*(1/(sqrt(20)*17.2))*sqrt((1287.91-2-2524.015+3002.654)/19)
+```
+
+
+
+
+
+
+

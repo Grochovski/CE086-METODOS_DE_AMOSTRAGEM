@@ -3,8 +3,13 @@ title: "Trabalho de Métodos de Amostragem"
 author: "Elen Grochovski GRR20170407"
 date: "30 de novembro de 2018"
 output:
+<<<<<<< HEAD
   pdf_document: default
   html_document: default
+=======
+  html_document: default
+  pdf_document: default
+>>>>>>> c1b9ebd6fa9c1fb57c449224e1fb11af6af8a2b7
 teacher: Ary Elias Sabbag Junior
 ---
 
